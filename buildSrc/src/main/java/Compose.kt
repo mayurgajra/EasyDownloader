@@ -18,4 +18,8 @@ object Compose {
 
     private const val lifecycleVersion = "2.4.0"
     const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion"
+
+    private const val accompanistVersion = "0.23.0"
+    const val systemuicontrollerCompose = "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
+    const val pagerCompose = "com.google.accompanist:accompanist-pager:$accompanistVersion"
 }
