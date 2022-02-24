@@ -59,6 +59,7 @@ dependencies {
     implementation(Compose.activityCompose)
     implementation (Compose.systemuicontrollerCompose)
     implementation (Compose.pagerCompose)
+    implementation (Compose.permissions)
 
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)

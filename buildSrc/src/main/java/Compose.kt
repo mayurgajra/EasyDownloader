@@ -22,4 +22,5 @@ object Compose {
     private const val accompanistVersion = "0.23.0"
     const val systemuicontrollerCompose = "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
     const val pagerCompose = "com.google.accompanist:accompanist-pager:$accompanistVersion"
+    const val permissions = "com.google.accompanist:accompanist-permissions:$accompanistVersion"
 }
