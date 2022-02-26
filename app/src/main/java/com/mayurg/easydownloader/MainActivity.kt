@@ -1,6 +1,7 @@
 package com.mayurg.easydownloader
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
             EasyDownloaderTheme {
 
                 val permissions = mutableListOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P){
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                     permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
                 val permissionsState = rememberMultiplePermissionsState(
@@ -57,6 +58,9 @@ class MainActivity : ComponentActivity() {
                 )
 
                 LaunchedEffect(key1 = permissionsState.allPermissionsGranted) {
+                    if (permissionsState.allPermissionsGranted) {
+                        startDownloadService()
+                    }
                     Log.d(
                         "MG-permissionsState",
                         permissionsState.allPermissionsGranted.toString()
@@ -80,6 +84,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun startDownloadService() {
+        val intent = Intent(this, DownloadService::class.java)
+        startService(intent)
     }
 }
 

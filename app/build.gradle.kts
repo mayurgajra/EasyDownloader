@@ -66,6 +66,7 @@ dependencies {
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
+    implementation(AndroidX.lifecycleExtensionService)
 
     implementation(Coil.coilCompose)
 
