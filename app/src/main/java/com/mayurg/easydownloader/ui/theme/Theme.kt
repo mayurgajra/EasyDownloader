@@ -6,6 +6,10 @@ import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.mayurg.core_ui.Purple200
+import com.mayurg.core_ui.Purple500
+import com.mayurg.core_ui.Purple700
+import com.mayurg.core_ui.Teal200
 
 private val DarkColorPalette = darkColors(
     primary = Purple200,

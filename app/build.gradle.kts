@@ -57,12 +57,26 @@ dependencies {
     implementation(Compose.navigation)
     implementation(Compose.viewModelCompose)
     implementation(Compose.activityCompose)
-    implementation (Compose.systemuicontrollerCompose)
-    implementation (Compose.pagerCompose)
-    implementation (Compose.permissions)
+    implementation(Compose.systemuicontrollerCompose)
+    implementation(Compose.pagerCompose)
+    implementation(Compose.permissions)
 
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
+
+    //core
+    implementation(project(Modules.core))
+    implementation(project(Modules.coreUi))
+
+    //insta downloader
+    implementation(project(Modules.instaDownloaderPresentation))
+    implementation(project(Modules.instaDownloaderDomain))
+    implementation(project(Modules.instaDownloaderData))
+
+    //fb downloader
+    implementation(project(Modules.fbDownloaderPresentation))
+    implementation(project(Modules.fbDownloaderDomain))
+    implementation(project(Modules.fbDownloaderData))
 
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)

@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EasyDownloader">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.EasyDownloader">
             <intent-filter>
@@ -26,7 +26,7 @@
         </activity>
 
         <service
-            android:name=".DownloadService"
+            android:name=".services.DownloadService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.mayurg.easydownloader.download" />

@@ -14,3 +14,13 @@ dependencyResolutionManagement {
 }
 rootProject.name = "EasyDownloader"
 include ':app'
+include ':InstaDownloader'
+include ':InstaDownloader:instadownloader_data'
+include ':InstaDownloader:instadownloader_domain'
+include ':InstaDownloader:instadownloader_presentation'
+include ':core-ui'
+include ':core'
+include ':FbDownloader'
+include ':FbDownloader:fbdownloader_data'
+include ':FbDownloader:fbdownloader_domain'
+include ':FbDownloader:fbdownloader_presentation'
