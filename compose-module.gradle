@@ -75,4 +75,12 @@ dependencies {
     androidTestImplementation Testing.mockk
     androidTestImplementation Testing.mockWebServer
     androidTestImplementation Testing.hiltTesting
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+}
+
+allprojects {
+    configurations.all {
+        resolutionStrategy.force 'org.objenesis:objenesis:2.6'
+    }
 }
