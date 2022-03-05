@@ -8,7 +8,10 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -24,11 +27,9 @@ import com.mayurg.easydownloader.R
 import com.mayurg.easydownloader.services.DownloadService
 import com.mayurg.easydownloader.ui.tabsetup.TabsSetup
 import com.mayurg.easydownloader.ui.theme.EasyDownloaderTheme
-import com.mayurg.filemanager.FileManager
 
 class MainActivity : ComponentActivity() {
 
-    val fileManager by lazy { FileManager.Builder(this).build() }
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +64,7 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(key1 = permissionsState.allPermissionsGranted) {
                     if (permissionsState.allPermissionsGranted) {
-                        fileManager.readFiles()
-//                        startDownloadService()
+                        startDownloadService()
                     }
                     Log.d(
                         "MG-permissionsState",

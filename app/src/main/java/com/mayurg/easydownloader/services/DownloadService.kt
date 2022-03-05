@@ -7,16 +7,26 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.lifecycleScope
 import com.mayurg.easydownloader.utils.CHANNEL_ID
 import com.mayurg.easydownloader.utils.KEY_TEXT_REPLY
 import com.mayurg.easydownloader.utils.createReplyNotification
+import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DownloadService : LifecycleService() {
+@AndroidEntryPoint
+class DownloadService: LifecycleService() {
+
+    @Inject
+    lateinit var instaDownloaderApi: InstaDownloaderApi
 
     companion object {
         const val CUSTOM_ACTION = "com.mayurg.easydownloader.download"
@@ -35,7 +45,11 @@ class DownloadService : LifecycleService() {
                 val text = getMessageText(intent)
                 text?.toString()?.let { url ->
                     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-                    download(url)
+                    lifecycleScope.launch {
+                        val a = url.split("?")[0]
+                        val data = instaDownloaderApi.getDownloadUrlFromPostUrl(a,1)
+                        Log.d("MG-data", data.toString())
+                    }
                 }
 
             }

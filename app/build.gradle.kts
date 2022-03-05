@@ -81,9 +81,6 @@ dependencies {
     implementation(project(Modules.fbDownloaderDomain))
     implementation(project(Modules.fbDownloaderData))
 
-    //downloader
-    implementation(project(Modules.fileManager))
-
     implementation(AndroidX.coreKtx)
     implementation(AndroidX.appCompat)
     implementation(AndroidX.lifecycleExtensionService)
