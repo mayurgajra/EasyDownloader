@@ -1,6 +1,6 @@
 package com.mayurg.instadownloader_data.remote
 
-import okhttp3.ResponseBody
+import com.mayurg.instadownloader_data.models.GetMediaInfo
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -14,10 +14,10 @@ interface InstaDownloaderApi {
 
 
     @GET
-    suspend fun getDownloadUrlFromPostUrl(
+    suspend fun getMediaInfoFromUrl(
         @Url url: String,
-        @Query("__a") a: Int
-    ): Response<ResponseBody>
+        @Query("url") a: String
+    ): Response<GetMediaInfo>
 
 
 }

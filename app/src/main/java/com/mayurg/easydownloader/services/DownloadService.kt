@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class DownloadService: LifecycleService() {
+class DownloadService : LifecycleService() {
 
     @Inject
     lateinit var instaDownloaderApi: InstaDownloaderApi
@@ -46,8 +46,8 @@ class DownloadService: LifecycleService() {
                 text?.toString()?.let { url ->
                     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
                     lifecycleScope.launch {
-                        val a = url.split("?")[0]
-                        val data = instaDownloaderApi.getDownloadUrlFromPostUrl(a,1)
+                        val b = "https://api.instagram.com/oembed"
+                        val data = instaDownloaderApi.getMediaInfoFromUrl(b, url)
                         Log.d("MG-data", data.toString())
                     }
                 }
