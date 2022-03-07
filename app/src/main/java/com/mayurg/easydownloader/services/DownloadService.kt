@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
@@ -48,6 +49,11 @@ class DownloadService : LifecycleService() {
                     lifecycleScope.launch {
                         val b = "https://api.instagram.com/oembed"
                         val data = instaDownloaderApi.getMediaInfoFromUrl(b, url)
+                        val downloadUrl = data.body()!!.thumbnail_url!!
+                        val thumbUrl = data.body()?.thumbnail_url?.let {
+                            it.substring(0, it.indexOfFirst { c -> c == '?' })
+                        }.orEmpty()
+                        download(downloadUrl,thumbUrl)
                         Log.d("MG-data", data.toString())
                     }
                 }
@@ -63,11 +69,11 @@ class DownloadService : LifecycleService() {
 
     }
 
-    private fun download(url: String) {
+    private fun download(url: String, thumbUrl: String) {
         if (!Patterns.WEB_URL.matcher(url).matches())
             return
 
-        val fileName = url.substring(url.lastIndexOf("/") + 1, url.length)
+        val fileName = thumbUrl.substring(thumbUrl.lastIndexOf("/") + 1, thumbUrl.length)
 
         val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val downloadUri = Uri.parse(url)
@@ -75,9 +81,10 @@ class DownloadService : LifecycleService() {
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
             .setAllowedOverRoaming(false)
             .setTitle(fileName)
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setDescription("cdcd")
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
 
-        request.allowScanningByMediaScanner()
         val id = downloadManager.enqueue(request)
     }
 
