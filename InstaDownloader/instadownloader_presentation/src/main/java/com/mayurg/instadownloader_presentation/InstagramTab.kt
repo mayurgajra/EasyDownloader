@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun InstagramTab() {
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,

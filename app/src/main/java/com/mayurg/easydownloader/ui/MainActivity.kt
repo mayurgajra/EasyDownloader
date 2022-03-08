@@ -1,12 +1,14 @@
 package com.mayurg.easydownloader.ui
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -27,9 +29,26 @@ import com.mayurg.easydownloader.R
 import com.mayurg.easydownloader.services.DownloadService
 import com.mayurg.easydownloader.ui.tabsetup.TabsSetup
 import com.mayurg.easydownloader.ui.theme.EasyDownloaderTheme
+import com.mayurg.filemanager.FileManager
 
 class MainActivity : ComponentActivity() {
 
+    val fileManger by lazy { FileManager.Builder(this).build() }
+
+    val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val directoryUri = data?.data ?: return@registerForActivityResult
+
+                contentResolver.takePersistableUriPermission(
+                    directoryUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+                contentResolver.persistedUriPermissions
+                fileManger.loadDirectory(directoryUri)
+            }
+        }
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,7 +83,7 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(key1 = permissionsState.allPermissionsGranted) {
                     if (permissionsState.allPermissionsGranted) {
-                        startDownloadService()
+                        openAccessTree()
                     }
                     Log.d(
                         "MG-permissionsState",
@@ -94,6 +113,13 @@ class MainActivity : ComponentActivity() {
     private fun startDownloadService() {
         val intent = Intent(this, DownloadService::class.java)
         startService(intent)
+    }
+
+    private fun openAccessTree() {
+
+
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+        resultLauncher.launch(intent)
     }
 }
 
