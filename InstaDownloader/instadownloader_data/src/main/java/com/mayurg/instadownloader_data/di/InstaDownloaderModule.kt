@@ -15,6 +15,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object InstaDownloaderModule {
 
+
     @Provides
     @Singleton
     fun providesOkHttpClient(): OkHttpClient {
@@ -23,7 +24,17 @@ object InstaDownloaderModule {
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
                 }
-            ).build()
+            ).addInterceptor {
+                it.proceed(
+                    it.request().newBuilder()
+                        .addHeader("x-rapidapi-host", "instagram85.p.rapidapi.com")
+                        .addHeader(
+                            "x-rapidapi-key",
+                            "393dc2581cmsh4136cd415472ca0p1a1259jsn911f834c48ea"
+                        )
+                        .build()
+                )
+            }.build()
     }
 
 

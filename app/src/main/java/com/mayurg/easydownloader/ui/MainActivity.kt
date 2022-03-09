@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(key1 = permissionsState.allPermissionsGranted) {
                     if (permissionsState.allPermissionsGranted) {
-                        openAccessTree()
+                        startDownloadService()
                     }
                     Log.d(
                         "MG-permissionsState",

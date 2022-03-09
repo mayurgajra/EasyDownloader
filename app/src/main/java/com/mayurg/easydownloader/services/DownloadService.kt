@@ -8,7 +8,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
@@ -47,14 +46,10 @@ class DownloadService : LifecycleService() {
                 text?.toString()?.let { url ->
                     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
                     lifecycleScope.launch {
-                        val b = "https://api.instagram.com/oembed"
-                        val data = instaDownloaderApi.getMediaInfoFromUrl(b, url)
-                        val downloadUrl = data.body()!!.thumbnail_url!!
-                        val thumbUrl = data.body()?.thumbnail_url?.let {
-                            it.substring(0, it.indexOfFirst { c -> c == '?' })
-                        }.orEmpty()
-                        download(downloadUrl,thumbUrl)
-                        Log.d("MG-data", data.toString())
+                        val a = url.substring(0, url.lastIndexOf("/"))
+                        val b = "https://instagram85.p.rapidapi.com/media/$a"
+                        val data = instaDownloaderApi.getMediaInfoFromUrl(b, "url")
+//                        Log.d("MG-data", data.toString())
                     }
                 }
 
@@ -69,11 +64,11 @@ class DownloadService : LifecycleService() {
 
     }
 
-    private fun download(url: String, thumbUrl: String) {
+    private fun download(url: String) {
         if (!Patterns.WEB_URL.matcher(url).matches())
             return
 
-        val fileName = thumbUrl.substring(thumbUrl.lastIndexOf("/") + 1, thumbUrl.length)
+        val fileName = url.substring(url.lastIndexOf("/") + 1, url.length)
 
         val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val downloadUri = Uri.parse(url)
@@ -82,7 +77,7 @@ class DownloadService : LifecycleService() {
             .setAllowedOverRoaming(false)
             .setTitle(fileName)
             .setDescription("cdcd")
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,fileName)
+            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
             .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
 
         val id = downloadManager.enqueue(request)
