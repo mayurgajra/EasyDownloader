@@ -1,14 +1,10 @@
 package com.mayurg.easydownloader.services
 
-import android.app.DownloadManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
-import android.os.Environment
-import android.util.Patterns
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
@@ -35,7 +31,7 @@ class DownloadService : LifecycleService() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-        when (val act = intent?.action) {
+        when (intent?.action) {
             CUSTOM_ACTION -> {
                 val builder = createReplyNotification()
                 NotificationManagerCompat.from(this).apply {
@@ -52,7 +48,6 @@ class DownloadService : LifecycleService() {
 //                        Log.d("MG-data", data.toString())
                     }
                 }
-
             }
 
             else -> {
@@ -64,43 +59,23 @@ class DownloadService : LifecycleService() {
 
     }
 
-    private fun download(url: String) {
-        if (!Patterns.WEB_URL.matcher(url).matches())
-            return
 
-        val fileName = url.substring(url.lastIndexOf("/") + 1, url.length)
-
-        val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-        val downloadUri = Uri.parse(url)
-        val request = DownloadManager.Request(downloadUri)
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
-            .setAllowedOverRoaming(false)
-            .setTitle(fileName)
-            .setDescription("cdcd")
-            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-
-        val id = downloadManager.enqueue(request)
-    }
 
     private fun getMessageText(intent: Intent): CharSequence? {
         return RemoteInput.getResultsFromIntent(intent)
             ?.getCharSequence(KEY_TEXT_REPLY)
     }
 
-    fun startForegroundService() {
+    private fun startForegroundService() {
         createNotificationChannel()
 
-
-        var builder = createReplyNotification()
+        val builder = createReplyNotification()
 
         startForeground(102, builder.build())
     }
 
 
     private fun createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Download"
             val descriptionText = "Download service"
@@ -109,7 +84,6 @@ class DownloadService : LifecycleService() {
                 description = descriptionText
                 setShowBadge(false)
             }
-            // Register the channel with the system
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
