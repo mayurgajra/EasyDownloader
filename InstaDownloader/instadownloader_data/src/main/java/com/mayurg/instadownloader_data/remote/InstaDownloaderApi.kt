@@ -19,5 +19,10 @@ interface InstaDownloaderApi {
         @Query("by") a: String
     ): Response<ResponseBody>
 
+    @GET
+    suspend fun downloadInstaImage(
+        @Url url: String,
+    ): Response<ResponseBody>
+
 
 }

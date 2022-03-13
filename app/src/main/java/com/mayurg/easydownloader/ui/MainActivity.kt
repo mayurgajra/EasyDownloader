@@ -116,8 +116,6 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun openAccessTree() {
-
-
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
         resultLauncher.launch(intent)
     }

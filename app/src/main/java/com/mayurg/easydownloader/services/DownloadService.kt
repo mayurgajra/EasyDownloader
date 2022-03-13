@@ -10,6 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import androidx.work.*
 import com.mayurg.easydownloader.utils.CHANNEL_ID
 import com.mayurg.easydownloader.utils.KEY_TEXT_REPLY
 import com.mayurg.easydownloader.utils.createReplyNotification
@@ -42,10 +43,32 @@ class DownloadService : LifecycleService() {
                 text?.toString()?.let { url ->
                     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
                     lifecycleScope.launch {
-                        val a = url.substring(0, url.lastIndexOf("/"))
-                        val b = "https://instagram85.p.rapidapi.com/media/$a"
-                        val data = instaDownloaderApi.getMediaInfoFromUrl(b, "url")
-//                        Log.d("MG-data", data.toString())
+
+                        val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
+                            .setConstraints(
+                                Constraints.Builder()
+                                    .setRequiredNetworkType(
+                                        NetworkType.CONNECTED
+                                    )
+                                    .build()
+                            )
+                            .build()
+
+
+
+                        val workManager = WorkManager.getInstance(applicationContext)
+
+                        workManager
+                            .beginUniqueWork(
+                                "download",
+                                ExistingWorkPolicy.KEEP,
+                                downloadRequest
+                            )
+                            .enqueue()
+                        /* val a = url.substring(0, url.lastIndexOf("/"))
+                         val b = "https://instagram85.p.rapidapi.com/media/$a"
+                         val data = instaDownloaderApi.getMediaInfoFromUrl(b, "url")
+                         Log.d("MG-data", data.toString())*/
                     }
                 }
             }
@@ -58,7 +81,6 @@ class DownloadService : LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
 
     }
-
 
 
     private fun getMessageText(intent: Intent): CharSequence? {
