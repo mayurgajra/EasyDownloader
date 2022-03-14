@@ -5,13 +5,16 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import androidx.work.*
+import com.mayurg.easydownloader.R
 import com.mayurg.easydownloader.utils.CHANNEL_ID
+import com.mayurg.easydownloader.utils.InstaParser
 import com.mayurg.easydownloader.utils.KEY_TEXT_REPLY
 import com.mayurg.easydownloader.utils.createReplyNotification
 import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
@@ -44,6 +47,19 @@ class DownloadService : LifecycleService() {
                     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
                     lifecycleScope.launch {
 
+                        val response = resources
+                            .openRawResource(R.raw.sample)
+                            .readBytes()
+                            .decodeToString()
+
+                        val downloadUrl = InstaParser.getDownloadUrl(response)
+
+                        Log.d("MG-downloadUrl", downloadUrl)
+
+
+                        val data = Data.Builder()
+                        data.putString("downloadUrl", downloadUrl)
+
                         val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
                             .setConstraints(
                                 Constraints.Builder()
@@ -52,8 +68,8 @@ class DownloadService : LifecycleService() {
                                     )
                                     .build()
                             )
+                            .setInputData(data.build())
                             .build()
-
 
 
                         val workManager = WorkManager.getInstance(applicationContext)

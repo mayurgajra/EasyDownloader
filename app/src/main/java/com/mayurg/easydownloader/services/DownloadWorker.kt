@@ -25,8 +25,9 @@ class DownloadWorker(
 
     override suspend fun doWork(): Result {
         startForegroundService()
+        val downloadUrl = workerParams.inputData.getString("downloadUrl").orEmpty()
         val response =
-            InstaDownloaderApi.instance.downloadInstaImage("https://scontent-frx5-2.cdninstagram.com/v/t51.2885-15/275513200_122171373524205_6779244514128294598_n.jpg?stp=dst-jpg_e15_fr_s1080x1080&_nc_ht=scontent-frx5-2.cdninstagram.com&_nc_cat=109&_nc_ohc=TwI-hzxnQFEAX-23qvo&edm=AABBvjUBAAAA&ccb=7-4&oh=00_AT-BdeKYk0EWm9rpFOj20pev-2i_rkmTRYADWlzg1qhT1Q&oe=62348B28&_nc_sid=83d603")
+            InstaDownloaderApi.instance.downloadInstaImage(downloadUrl)
         response.body()?.let { body ->
             return withContext(Dispatchers.IO) {
                 val file = File(context.cacheDir, "image.jpg")
