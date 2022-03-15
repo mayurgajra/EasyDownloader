@@ -1,9 +1,9 @@
-package com.mayurg.easydownloader.utils
+package com.mayurg.instadownloader_data.repository
 
 import org.json.JSONException
 import org.json.JSONObject
 
-object InstaParser {
+class InstaParser {
 
     fun getDownloadUrl(response: String): String {
         try {

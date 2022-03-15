@@ -5,19 +5,15 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import androidx.work.*
-import com.mayurg.easydownloader.R
 import com.mayurg.easydownloader.utils.CHANNEL_ID
-import com.mayurg.easydownloader.utils.InstaParser
 import com.mayurg.easydownloader.utils.KEY_TEXT_REPLY
 import com.mayurg.easydownloader.utils.createReplyNotification
-import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
+import com.mayurg.instadownloader_domain.repository.InstaDownloaderRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +22,7 @@ import javax.inject.Inject
 class DownloadService : LifecycleService() {
 
     @Inject
-    lateinit var instaDownloaderApi: InstaDownloaderApi
+    lateinit var instaDownloaderApi: InstaDownloaderRepository
 
     companion object {
         const val CUSTOM_ACTION = "com.mayurg.easydownloader.download"
@@ -46,45 +42,7 @@ class DownloadService : LifecycleService() {
                 text?.toString()?.let { url ->
                     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
                     lifecycleScope.launch {
-
-                        val response = resources
-                            .openRawResource(R.raw.sample)
-                            .readBytes()
-                            .decodeToString()
-
-                        val downloadUrl = InstaParser.getDownloadUrl(response)
-
-                        Log.d("MG-downloadUrl", downloadUrl)
-
-
-                        val data = Data.Builder()
-                        data.putString("downloadUrl", downloadUrl)
-
-                        val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
-                            .setConstraints(
-                                Constraints.Builder()
-                                    .setRequiredNetworkType(
-                                        NetworkType.CONNECTED
-                                    )
-                                    .build()
-                            )
-                            .setInputData(data.build())
-                            .build()
-
-
-                        val workManager = WorkManager.getInstance(applicationContext)
-
-                        workManager
-                            .beginUniqueWork(
-                                "download",
-                                ExistingWorkPolicy.KEEP,
-                                downloadRequest
-                            )
-                            .enqueue()
-                        /* val a = url.substring(0, url.lastIndexOf("/"))
-                         val b = "https://instagram85.p.rapidapi.com/media/$a"
-                         val data = instaDownloaderApi.getMediaInfoFromUrl(b, "url")
-                         Log.d("MG-data", data.toString())*/
+                        instaDownloaderApi.downloadMedia(url)
                     }
                 }
             }

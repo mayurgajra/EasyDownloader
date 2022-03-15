@@ -64,11 +64,10 @@ dependencies {
     implementation(Compose.pagerCompose)
     implementation(Compose.permissions)
 
-    //work manager
-    implementation(Work.workManager)
-
     implementation(DaggerHilt.hiltAndroid)
     kapt(DaggerHilt.hiltCompiler)
+
+    implementation(Work.workManager)
 
     //core
     implementation(project(Modules.core))

@@ -1,15 +1,12 @@
-package com.mayurg.easydownloader.services
+package com.mayurg.instadownloader_data.remote
 
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.mayurg.easydownloader.R
-import com.mayurg.easydownloader.utils.CHANNEL_ID
-import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
+import com.mayurg.instadownloader_data.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -45,7 +42,7 @@ class DownloadWorker(
                 }
                 Result.success(
                     workDataOf(
-                        "uri" to file.toUri().toString()
+                        "uri" to file.toURI().toString()
                     )
                 )
             }
@@ -69,8 +66,8 @@ class DownloadWorker(
         setForeground(
             ForegroundInfo(
                 Random.nextInt(),
-                NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                NotificationCompat.Builder(context, "DownloadService")
+                    .setSmallIcon(R.drawable.ic_download)
                     .setContentText("Downloading...")
                     .setContentTitle("Download in progress")
                     .build()
