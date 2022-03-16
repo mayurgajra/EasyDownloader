@@ -1,6 +1,9 @@
 package com.mayurg.instadownloader_data.remote
 
+import android.content.ContentValues
 import android.content.Context
+import android.os.Build
+import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
@@ -9,9 +12,9 @@ import androidx.work.workDataOf
 import com.mayurg.instadownloader_data.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
+import okhttp3.ResponseBody
 import java.io.IOException
+import java.util.*
 import kotlin.random.Random
 
 @Suppress("BlockingMethodInNonBlockingContext")
@@ -27,22 +30,10 @@ class DownloadWorker(
             InstaDownloaderApi.instance.downloadInstaImage(downloadUrl)
         response.body()?.let { body ->
             return withContext(Dispatchers.IO) {
-                val file = File(context.cacheDir, "image.jpg")
-                val outputStream = FileOutputStream(file)
-                outputStream.use { stream ->
-                    try {
-                        stream.write(body.bytes())
-                    } catch (e: IOException) {
-                        return@withContext Result.failure(
-                            workDataOf(
-                                "error" to e.localizedMessage
-                            )
-                        )
-                    }
-                }
+                savePhotoToExternalStorage(UUID.randomUUID().toString(), body)
                 Result.success(
                     workDataOf(
-                        "uri" to file.toURI().toString()
+                        "uri" to "Test"
                     )
                 )
             }
@@ -73,5 +64,40 @@ class DownloadWorker(
                     .build()
             )
         )
+    }
+
+    private fun savePhotoToExternalStorage(displayName: String, body: ResponseBody): Boolean {
+        val imageCollection = sdk29AndUp {
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } ?: MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "$displayName.jpg")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/EasyDownloader")
+        }
+        return try {
+            context.contentResolver.insert(imageCollection, contentValues)?.also { uri ->
+                context.contentResolver.openOutputStream(uri).use { outputStream ->
+                    outputStream?.use { stream ->
+                        try {
+                            stream.write(body.bytes())
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            } ?: throw IOException("Couldn't create MediaStore entry")
+            true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    private inline fun <T> sdk29AndUp(onSdk29: () -> T): T? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            onSdk29()
+        } else null
     }
 }
