@@ -74,7 +74,9 @@ class DownloadWorker(
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "$displayName.jpg")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/EasyDownloader")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/EasyDownloader")
+            }
         }
         return try {
             context.contentResolver.insert(imageCollection, contentValues)?.also { uri ->
