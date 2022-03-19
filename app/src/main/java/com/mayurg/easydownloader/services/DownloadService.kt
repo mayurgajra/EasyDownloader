@@ -67,7 +67,7 @@ class DownloadService : LifecycleService() {
 
         val builder = createReplyNotification()
 
-        startForeground(102, builder.build())
+        startForeground(NOTIFICATION_ID, builder.build())
     }
 
 

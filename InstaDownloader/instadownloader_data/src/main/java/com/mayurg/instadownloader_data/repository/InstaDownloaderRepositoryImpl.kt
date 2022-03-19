@@ -1,7 +1,9 @@
 package com.mayurg.instadownloader_data.repository
 
+import android.util.Log
 import androidx.work.*
 import com.mayurg.instadownloader_data.remote.DownloadWorker
+import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
 import com.mayurg.instadownloader_domain.repository.InstaDownloaderRepository
 import javax.inject.Inject
 import javax.inject.Named
@@ -10,18 +12,19 @@ import javax.inject.Named
 class InstaDownloaderRepositoryImpl @Inject constructor(
     @Named("response") private val response: String,
     private val instaParser: InstaParser,
-    private val workManager: WorkManager
+    private val workManager: WorkManager,
+    private val instaDownloaderApi: InstaDownloaderApi,
 ) : InstaDownloaderRepository {
 
-    override fun downloadMedia(url: String) {
+    override suspend fun downloadMedia(url: String) {
 
         // TODO : Uncomment this When ready to make actual API call
-        /* val a = url.substring(0, url.lastIndexOf("/"))
-         val b = "https://instagram85.p.rapidapi.com/media/$a"
-         val data = instaDownloaderApi.getMediaInfoFromUrl(b, "url")
-         Log.d("MG-data", data.toString())*/
+        val a = url.substring(0, url.lastIndexOf("/"))
+        val b = "https://instagram85.p.rapidapi.com/media/$a"
+        val response1 = instaDownloaderApi.getMediaInfoFromUrl(b, "url")
+        Log.d("MG-data", response1.toString())
 
-        val downloadUrl = instaParser.getDownloadUrl(response)
+        val downloadUrl = instaParser.getDownloadUrl(response1.body()!!.string())
 
         val data = Data.Builder()
         data.putString("downloadUrl", downloadUrl)

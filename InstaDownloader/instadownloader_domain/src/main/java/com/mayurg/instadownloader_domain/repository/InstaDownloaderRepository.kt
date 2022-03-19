@@ -2,5 +2,5 @@ package com.mayurg.instadownloader_domain.repository
 
 interface InstaDownloaderRepository {
 
-    fun downloadMedia(url: String)
+    suspend fun downloadMedia(url: String)
 }
