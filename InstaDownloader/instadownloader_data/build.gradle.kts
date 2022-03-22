@@ -5,6 +5,7 @@ apply {
 dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.instaDownloaderDomain))
+    "implementation"(project(Modules.fileManager))
 
     "implementation"(Retrofit.okHttp)
     "implementation"(Retrofit.retrofit)
