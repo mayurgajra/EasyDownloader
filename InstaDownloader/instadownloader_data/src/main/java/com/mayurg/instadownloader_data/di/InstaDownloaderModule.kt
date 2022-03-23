@@ -88,7 +88,7 @@ object InstaDownloaderModule {
         @Named("response") response: String,
         instaParser: InstaParser,
         workManager: WorkManager,
-        instaDownloaderApi: InstaDownloaderApi
+        instaDownloaderApi: InstaDownloaderApi,
     ): InstaDownloaderRepository {
         return InstaDownloaderRepositoryImpl(response, instaParser, workManager,instaDownloaderApi)
     }
