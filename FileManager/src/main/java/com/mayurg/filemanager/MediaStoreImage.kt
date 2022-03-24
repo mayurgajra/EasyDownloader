@@ -29,6 +29,6 @@ data class MediaStoreImage(
     val contentUri: Uri
 ) {
     companion object {
-       
+
     }
 }
