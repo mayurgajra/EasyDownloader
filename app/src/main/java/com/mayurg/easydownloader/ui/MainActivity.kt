@@ -2,10 +2,10 @@ package com.mayurg.easydownloader.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -45,7 +46,8 @@ class MainActivity : ComponentActivity() {
                     directoryUri,
                     Intent.FLAG_GRANT_READ_URI_PERMISSION
                 )
-                contentResolver.persistedUriPermissions
+                getSharedPreferences("test", Context.MODE_PRIVATE).edit()
+                    .putString("uri", directoryUri.toString()).apply()
                 fileManger.loadDirectory(directoryUri)
             }
         }
@@ -84,11 +86,8 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(key1 = permissionsState.allPermissionsGranted) {
                     if (permissionsState.allPermissionsGranted) {
                         startDownloadService()
+                        openAccessTree()
                     }
-                    Log.d(
-                        "MG-permissionsState",
-                        permissionsState.allPermissionsGranted.toString()
-                    )
                 }
 
                 Scaffold(
@@ -116,8 +115,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun openAccessTree() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-        resultLauncher.launch(intent)
+        val uri =
+            getSharedPreferences("test", Context.MODE_PRIVATE).getString("uri", null)
+                ?.toUri()
+
+        if (uri != null) {
+            fileManger.loadDirectory(uri)
+        } else {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+            resultLauncher.launch(intent)
+        }
     }
 }
 

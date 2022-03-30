@@ -1,6 +1,9 @@
 package com.mayurg.filemanager
 
+import android.net.Uri
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.documentfile.provider.DocumentFile
 
 class FileManager private constructor(
     private val activity: ComponentActivity,
@@ -19,6 +22,13 @@ class FileManager private constructor(
         fun build() = run {
             FileManager(activity)
         }
+    }
+
+    fun loadDirectory(directoryUri: Uri) {
+        val documentsTree = DocumentFile.fromTreeUri(activity.application, directoryUri) ?: return
+        val childDocuments = documentsTree.listFiles()
+
+        Log.d("MG-loadDirectory",childDocuments.size.toString())
     }
 
 
