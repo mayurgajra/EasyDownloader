@@ -1,14 +1,11 @@
 package com.mayurg.easydownloader.ui
 
 import android.Manifest
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -21,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -30,27 +26,11 @@ import com.mayurg.easydownloader.R
 import com.mayurg.easydownloader.services.DownloadService
 import com.mayurg.easydownloader.ui.tabsetup.TabsSetup
 import com.mayurg.easydownloader.ui.theme.EasyDownloaderTheme
-import com.mayurg.filemanager.FileManager
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    val fileManger by lazy { FileManager.Builder(this).build() }
-
-    val resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-                val directoryUri = data?.data ?: return@registerForActivityResult
-
-                contentResolver.takePersistableUriPermission(
-                    directoryUri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-                getSharedPreferences("test", Context.MODE_PRIVATE).edit()
-                    .putString("uri", directoryUri.toString()).apply()
-                fileManger.loadDirectory(directoryUri)
-            }
-        }
 
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,8 +65,8 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(key1 = permissionsState.allPermissionsGranted) {
                     if (permissionsState.allPermissionsGranted) {
-                        startDownloadService()
-                        openAccessTree()
+                        /*startDownloadService()
+                        openAccessTree()*/
                     }
                 }
 
@@ -103,7 +83,9 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) {
-                    TabsSetup()
+                    TabsSetup(
+                        isPermissionAllowed = permissionsState.allPermissionsGranted
+                    )
                 }
             }
         }
@@ -114,18 +96,6 @@ class MainActivity : ComponentActivity() {
         startService(intent)
     }
 
-    private fun openAccessTree() {
-        val uri =
-            getSharedPreferences("test", Context.MODE_PRIVATE).getString("uri", null)
-                ?.toUri()
-
-        if (uri != null) {
-            fileManger.loadDirectory(uri)
-        } else {
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-            resultLauncher.launch(intent)
-        }
-    }
 }
 
 

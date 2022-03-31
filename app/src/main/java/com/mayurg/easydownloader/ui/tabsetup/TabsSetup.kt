@@ -14,7 +14,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun TabsSetup() {
+fun TabsSetup(
+    isPermissionAllowed: Boolean = false,
+) {
 
     val tabTitles = listOf(
         "Instagram",
@@ -45,8 +47,8 @@ fun TabsSetup() {
             count = tabTitles.size,
             state = pagerState,
         ) { pageIndex ->
-            when(pageIndex) {
-                0 -> InstagramTab()
+            when (pageIndex) {
+                0 -> InstagramTab(isPermissionAllowed)
                 1 -> FacebookTab()
             }
         }

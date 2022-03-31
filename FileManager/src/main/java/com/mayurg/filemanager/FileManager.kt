@@ -1,12 +1,12 @@
 package com.mayurg.filemanager
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.documentfile.provider.DocumentFile
 
 class FileManager private constructor(
-    private val activity: ComponentActivity,
+    private val context: Context,
 ) {
 
     companion object {
@@ -14,21 +14,22 @@ class FileManager private constructor(
     }
 
 
-     data class Builder(
-        var activity: ComponentActivity
+    data class Builder(
+        var context: Context
     ) {
-        fun setActivity(activity: ComponentActivity) = apply { this.activity = activity }
 
         fun build() = run {
-            FileManager(activity)
+            FileManager(context)
         }
     }
 
-    fun loadDirectory(directoryUri: Uri) {
-        val documentsTree = DocumentFile.fromTreeUri(activity.application, directoryUri) ?: return
+    fun loadDirectory(directoryUri: Uri): List<DocumentFile> {
+        val documentsTree = DocumentFile.fromTreeUri(context, directoryUri) ?: return emptyList()
         val childDocuments = documentsTree.listFiles()
 
-        Log.d("MG-loadDirectory",childDocuments.size.toString())
+        Log.d("MG-loadDirectory", childDocuments.size.toString())
+
+        return childDocuments.asList()
     }
 
 
