@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.GridCells
@@ -15,6 +14,8 @@ import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -24,6 +25,8 @@ import androidx.core.net.toUri
 import androidx.documentfile.provider.DocumentFile
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun InstagramTab(
@@ -33,6 +36,8 @@ fun InstagramTab(
 
     val state = viewModel.state
     val context = LocalContext.current
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+
 
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -65,21 +70,32 @@ fun InstagramTab(
         }
     }
 
-    Column(
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing),
         modifier = Modifier.fillMaxSize(),
+        onRefresh = {
+            val uri = context.getSharedPreferences("test", Context.MODE_PRIVATE)
+                .getString("uri", null)
+                ?.toUri()
+
+            if (uri != null) {
+                viewModel.loadFiles(uri)
+            }
+        },
     ) {
-        FilesList(messages = state.list)
+        FilesList(list = state.list)
     }
 }
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FilesList(messages: List<DocumentFile>) {
+fun FilesList(list: List<DocumentFile>) {
     LazyVerticalGrid(
         cells = GridCells.Fixed(3),
+        modifier = Modifier.fillMaxSize(),
         content = {
-            items(messages) { item ->
+            items(list) { item ->
                 AsyncImage(
                     model = item.uri,
                     modifier = Modifier

@@ -23,4 +23,5 @@ object Compose {
     const val systemuicontrollerCompose = "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
     const val pagerCompose = "com.google.accompanist:accompanist-pager:$accompanistVersion"
     const val permissions = "com.google.accompanist:accompanist-permissions:$accompanistVersion"
+    const val swiperefresh = "com.google.accompanist:accompanist-swiperefresh:$accompanistVersion"
 }

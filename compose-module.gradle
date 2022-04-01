@@ -53,6 +53,7 @@ dependencies {
     implementation Compose.navigation
     implementation Compose.viewModelCompose
     implementation Compose.activityCompose
+    implementation Compose.swiperefresh
 
     kapt DaggerHilt.hiltCompiler
     implementation DaggerHilt.hiltAndroid
