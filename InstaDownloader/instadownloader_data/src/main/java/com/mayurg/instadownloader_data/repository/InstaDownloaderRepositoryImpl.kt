@@ -1,7 +1,10 @@
 package com.mayurg.instadownloader_data.repository
 
+import android.net.Uri
 import android.util.Log
+import androidx.documentfile.provider.DocumentFile
 import androidx.work.*
+import com.mayurg.filemanager.FileManager
 import com.mayurg.instadownloader_data.remote.DownloadWorker
 import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
 import com.mayurg.instadownloader_domain.repository.InstaDownloaderRepository
@@ -14,6 +17,7 @@ class InstaDownloaderRepositoryImpl @Inject constructor(
     private val instaParser: InstaParser,
     private val workManager: WorkManager,
     private val instaDownloaderApi: InstaDownloaderApi,
+    private val fileManager: FileManager
 ) : InstaDownloaderRepository {
 
     override suspend fun downloadMedia(url: String) {
@@ -49,7 +53,7 @@ class InstaDownloaderRepositoryImpl @Inject constructor(
             .enqueue()
     }
 
-    override suspend fun readFiles() {
-
+    override suspend fun readFiles(uri: Uri): List<DocumentFile> {
+        return fileManager.loadDirectory(uri)
     }
 }

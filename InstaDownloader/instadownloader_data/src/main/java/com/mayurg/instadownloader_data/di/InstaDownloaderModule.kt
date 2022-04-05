@@ -2,6 +2,7 @@ package com.mayurg.instadownloader_data.di
 
 import android.app.Application
 import androidx.work.WorkManager
+import com.mayurg.filemanager.FileManager
 import com.mayurg.instadownloader_data.R
 import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
 import com.mayurg.instadownloader_data.repository.InstaDownloaderRepositoryImpl
@@ -83,7 +84,6 @@ object InstaDownloaderModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideInstaRepository(
@@ -91,7 +91,22 @@ object InstaDownloaderModule {
         instaParser: InstaParser,
         workManager: WorkManager,
         instaDownloaderApi: InstaDownloaderApi,
+        fileManager: FileManager
     ): InstaDownloaderRepository {
-        return InstaDownloaderRepositoryImpl(response, instaParser, workManager,instaDownloaderApi)
+        return InstaDownloaderRepositoryImpl(
+            response,
+            instaParser,
+            workManager,
+            instaDownloaderApi,
+            fileManager
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileManger(
+        app: Application
+    ): FileManager {
+        return FileManager.Builder(app.applicationContext).build()
     }
 }

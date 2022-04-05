@@ -65,8 +65,7 @@ class MainActivity : ComponentActivity() {
 
                 LaunchedEffect(key1 = permissionsState.allPermissionsGranted) {
                     if (permissionsState.allPermissionsGranted) {
-                        /*startDownloadService()
-                        openAccessTree()*/
+//                        startDownloadService()
                     }
                 }
 

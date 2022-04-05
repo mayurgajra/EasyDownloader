@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mayurg.filemanager.FileManager
+import com.mayurg.instadownloader_domain.use_case.InstaLoaderUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class InstaViewModel @Inject constructor(
-    private val fileManager: FileManager
+    private val instaLoaderUseCases: InstaLoaderUseCases
 ) : ViewModel() {
 
 
@@ -27,7 +27,7 @@ class InstaViewModel @Inject constructor(
     fun loadFiles(uri: Uri) {
         viewModelScope.launch {
             isRefreshing.value = true
-            val list = fileManager.loadDirectory(uri)
+            val list = instaLoaderUseCases.instaLoadFiles(uri)
             state = state.copy(list = list)
             isRefreshing.value = false
         }
