@@ -8,4 +8,8 @@ interface InstaDownloaderRepository {
     suspend fun downloadMedia(url: String)
 
     suspend fun readFiles(uri: Uri): List<DocumentFile>
+
+    suspend fun saveFilesUri(uri: Uri)
+
+    suspend fun getFilesUri(): Uri?
 }
