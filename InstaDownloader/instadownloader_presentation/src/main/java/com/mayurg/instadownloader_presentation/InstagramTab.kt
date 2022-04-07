@@ -26,20 +26,21 @@ fun InstagramTab(
     val isRefreshing by viewModel.isRefreshing.collectAsState()
 
 
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-                val directoryUri = data?.data ?: return@rememberLauncherForActivityResult
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val directoryUri = data?.data ?: return@rememberLauncherForActivityResult
 
-                context.contentResolver.takePersistableUriPermission(
-                    directoryUri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-                viewModel.saveDirectoryUri(directoryUri)
-                viewModel.loadFiles(directoryUri)
-            }
+            context.contentResolver.takePersistableUriPermission(
+                directoryUri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            viewModel.saveDirectoryUri(directoryUri)
+            viewModel.loadFiles(directoryUri)
         }
+    }
 
     LaunchedEffect(key1 = isPermissionAllowed) {
         if (isPermissionAllowed) {

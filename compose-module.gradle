@@ -44,6 +44,8 @@ android {
 }
 
 dependencies {
+    implementation AndroidX.documentfile
+
     implementation Compose.compiler
     implementation Compose.ui
     implementation Compose.uiToolingPreview

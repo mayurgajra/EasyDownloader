@@ -6,5 +6,9 @@ object AndroidX {
     const val appCompat = "androidx.appcompat:appcompat:$appCompatVersion"
 
     private const val lifecycleExtensionVersion = "2.5.0-alpha03"
-    const val lifecycleExtensionService = "androidx.lifecycle:lifecycle-service:$lifecycleExtensionVersion"
+    const val lifecycleExtensionService =
+        "androidx.lifecycle:lifecycle-service:$lifecycleExtensionVersion"
+
+    private const val documentfileVersion = "1.0.1"
+    const val documentfile = "androidx.documentfile:documentfile:$documentfileVersion"
 }

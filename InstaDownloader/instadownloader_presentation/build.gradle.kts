@@ -9,5 +9,4 @@ dependencies {
     "implementation"(project(Modules.fileManager))
 
     "implementation"(Coil.coilCompose)
-    "implementation"("androidx.documentfile:documentfile:1.0.1")
 }
