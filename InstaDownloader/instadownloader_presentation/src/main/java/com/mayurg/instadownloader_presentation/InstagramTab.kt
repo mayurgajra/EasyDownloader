@@ -18,6 +18,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @Composable
 fun InstagramTab(
     isPermissionAllowed: Boolean = false,
+    onCountChange: (count: Int) -> Unit,
     viewModel: InstaViewModel = hiltViewModel()
 ) {
 
@@ -53,6 +54,10 @@ fun InstagramTab(
                 launcher.launch(intent)
             }
         }
+    }
+
+    LaunchedEffect(key1 = state.list.count()) {
+        onCountChange(state.list.count())
     }
 
     SwipeRefresh(

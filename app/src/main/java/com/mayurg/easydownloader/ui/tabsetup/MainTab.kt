@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Tab
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -19,7 +20,7 @@ import com.mayurg.easydownloader.R
 @Composable
 fun MainTab(
     selected: Boolean,
-    totalCount: Int,
+    totalCount: MutableState<Int>,
     title: String,
     onClick: () -> Unit
 ) {
@@ -43,7 +44,7 @@ fun MainTab(
                     .padding(horizontal = 6.dp, vertical = 1.dp)
             ) {
                 Text(
-                    text = totalCount.toString(),
+                    text = totalCount.value.toString(),
                     color = colorResource(R.color.white),
                     fontWeight = FontWeight.Bold,
                     fontSize = MaterialTheme.typography.overline.fontSize,

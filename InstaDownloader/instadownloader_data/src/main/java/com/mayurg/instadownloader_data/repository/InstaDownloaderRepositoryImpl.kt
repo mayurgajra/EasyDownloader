@@ -1,7 +1,6 @@
 package com.mayurg.instadownloader_data.repository
 
 import android.net.Uri
-import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import androidx.work.*
 import com.mayurg.filemanager.FileManager
@@ -24,13 +23,12 @@ class InstaDownloaderRepositoryImpl @Inject constructor(
 
     override suspend fun downloadMedia(url: String) {
 
-        // TODO : Uncomment this When ready to make actual API call
-        val a = url.substring(0, url.lastIndexOf("/"))
+       /* val a = url.substring(0, url.lastIndexOf("/"))
         val b = "https://instagram85.p.rapidapi.com/media/$a"
         val response1 = instaDownloaderApi.getMediaInfoFromUrl(b, "url")
-        Log.d("MG-data", response1.toString())
+        Log.d("MG-data", response1.toString())*/
 
-        val downloadUrl = instaParser.getDownloadUrl(response1.body()!!.string())
+        val downloadUrl = instaParser.getDownloadUrl(response)
 
         val data = Data.Builder()
         data.putString("downloadUrl", downloadUrl)
