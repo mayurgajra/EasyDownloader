@@ -5,21 +5,25 @@ import org.json.JSONObject
 
 class InstaParser {
 
-    fun getDownloadUrl(response: String): String {
+    fun getDownloadUrl(response: String): List<String> {
         try {
             val rootObj = JSONObject(response)
             val type = rootObj.getJSONObject("data").getString("type")
 
             when (type) {
                 "image" -> {
-                    return getImageUrl(rootObj)
+                    return listOf(getImageUrl(rootObj))
+                }
+
+                "sidecar" -> {
+                    return getSideCarUrls(rootObj)
                 }
             }
         } catch (e: JSONException) {
             e.printStackTrace()
         }
 
-        return ""
+        return emptyList()
     }
 
     private fun getImageUrl(rootObj: JSONObject): String {
@@ -44,5 +48,38 @@ class InstaParser {
         }
 
         return ""
+    }
+
+    private fun getSideCarUrls(rootObj: JSONObject): List<String> {
+        val imageUrls = mutableListOf<String>()
+        try {
+            val sidecar = rootObj.getJSONObject("data").getJSONArray("sidecar")
+
+            for (i in 0 until sidecar.length()) {
+                val images = sidecar.getJSONObject(i).getJSONObject("images")
+                val original = images.getJSONObject("original")
+
+                if (original.has("high")) {
+                    imageUrls.add(original.getString("high"))
+                    continue
+                }
+
+                if (original.has("standard")) {
+                    imageUrls.add(original.getString("standard"))
+                    continue
+                }
+
+                if (original.has("low")) {
+                    imageUrls.add(original.getString("standard"))
+                    continue
+                }
+            }
+
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+
+        return imageUrls
     }
 }
