@@ -5,6 +5,17 @@ import org.json.JSONObject
 
 class InstaParser {
 
+    fun getType(response: String): String {
+        try {
+            val rootObj = JSONObject(response)
+            return rootObj.getJSONObject("data").optString("type", "")
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+
+        return ""
+    }
+
     fun getDownloadUrl(response: String): List<String> {
         try {
             val rootObj = JSONObject(response)
@@ -17,6 +28,10 @@ class InstaParser {
 
                 "sidecar" -> {
                     return getSideCarUrls(rootObj)
+                }
+
+                "video" -> {
+                    return listOf(getVideoUrl(rootObj))
                 }
             }
         } catch (e: JSONException) {
@@ -40,7 +55,7 @@ class InstaParser {
             }
 
             if (original.has("low")) {
-                return original.getString("standard")
+                return original.getString("low")
             }
 
         } catch (e: JSONException) {
@@ -82,4 +97,29 @@ class InstaParser {
 
         return imageUrls
     }
+
+
+    private fun getVideoUrl(rootObj: JSONObject): String {
+        try {
+            val videos = rootObj.getJSONObject("data").getJSONObject("videos")
+
+            if (videos.has("high")) {
+                return videos.getString("high")
+            }
+
+            if (videos.has("standard")) {
+                return videos.getString("standard")
+            }
+
+            if (videos.has("low")) {
+                return videos.getString("low")
+            }
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+
+        return ""
+    }
+
 }

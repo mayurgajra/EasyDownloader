@@ -26,11 +26,17 @@ class DownloadWorker(
     override suspend fun doWork(): Result {
         startForegroundService()
         val downloadUrl = workerParams.inputData.getString("downloadUrl").orEmpty()
+        val type = workerParams.inputData.getString("type").orEmpty()
         val response =
             InstaDownloaderApi.instance.downloadInstaImage(downloadUrl)
         response.body()?.let { body ->
             return withContext(Dispatchers.IO) {
-                savePhotoToExternalStorage(UUID.randomUUID().toString(), body)
+                if (type == "video") {
+                    saveVideoToExternalStorage(UUID.randomUUID().toString(), body)
+                } else {
+                    savePhotoToExternalStorage(UUID.randomUUID().toString(), body)
+                }
+
                 Result.success(
                     workDataOf(
                         "uri" to "Test"
@@ -78,6 +84,38 @@ class DownloadWorker(
                 put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/EasyDownloader")
             }
         }
+        return try {
+            context.contentResolver.insert(imageCollection, contentValues)?.also { uri ->
+                context.contentResolver.openOutputStream(uri).use { outputStream ->
+                    outputStream?.use { stream ->
+                        try {
+                            stream.write(body.bytes())
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            } ?: throw IOException("Couldn't create MediaStore entry")
+            true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    private fun saveVideoToExternalStorage(displayName: String, body: ResponseBody): Boolean {
+        val imageCollection = sdk29AndUp {
+            MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } ?: MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Video.Media.DISPLAY_NAME, "$displayName.mp4")
+            put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/EasyDownloader")
+            }
+        }
+
         return try {
             context.contentResolver.insert(imageCollection, contentValues)?.also { uri ->
                 context.contentResolver.openOutputStream(uri).use { outputStream ->

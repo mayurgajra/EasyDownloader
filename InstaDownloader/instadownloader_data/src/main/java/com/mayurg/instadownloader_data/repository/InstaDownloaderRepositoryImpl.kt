@@ -29,11 +29,13 @@ class InstaDownloaderRepositoryImpl @Inject constructor(
          Log.d("MG-data", response1.toString())*/
 
         val downloadUrls = instaParser.getDownloadUrl(response)
+        val type = instaParser.getType(response)
 
         for (i in downloadUrls.indices) {
             val downloadUrl = downloadUrls[i]
             val data = Data.Builder()
             data.putString("downloadUrl", downloadUrl)
+            data.putString("type", type)
 
             val downloadRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
                 .setConstraints(
