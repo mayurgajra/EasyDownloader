@@ -91,6 +91,7 @@ dependencies {
     implementation(AndroidX.lifecycleExtensionService)
 
     implementation(Coil.coilCompose)
+    implementation(Coil.coilComposeVideo)
 
     implementation(Google.material)
 

@@ -23,15 +23,20 @@ fun FilesList(list: List<DocumentFile>) {
         modifier = Modifier.fillMaxSize(),
         content = {
             items(list) { item ->
-                AsyncImage(
-                    model = item.uri,
-                    modifier = Modifier
-                        .border(0.5.dp, Color.White)
-                        .aspectRatio(1f),
-                    contentDescription = "test",
-                    contentScale = ContentScale.Crop
-                )
-
+                if (item.name?.contains(".mp4") == true) {
+                    VideoThumbnailLoader(
+                        uri = item.uri
+                    )
+                } else {
+                    AsyncImage(
+                        model = item.uri,
+                        modifier = Modifier
+                            .border(0.5.dp, Color.White)
+                            .aspectRatio(1f),
+                        contentDescription = "test",
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
         }
     )

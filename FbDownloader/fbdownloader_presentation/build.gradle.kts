@@ -8,4 +8,5 @@ dependencies {
     "implementation"(project(Modules.fbDownloaderDomain))
 
     "implementation"(Coil.coilCompose)
+    "implementation"(Coil.coilComposeVideo)
 }

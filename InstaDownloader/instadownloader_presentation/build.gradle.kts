@@ -9,4 +9,5 @@ dependencies {
     "implementation"(project(Modules.fileManager))
 
     "implementation"(Coil.coilCompose)
+    "implementation"(Coil.coilComposeVideo)
 }
