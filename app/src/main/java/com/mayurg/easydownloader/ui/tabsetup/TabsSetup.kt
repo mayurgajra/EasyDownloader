@@ -3,16 +3,26 @@ package com.mayurg.easydownloader.ui.tabsetup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TabRow
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.core.net.toUri
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.mayurg.fbdownloader_presentation.FacebookTab
-import com.mayurg.instadownloader_presentation.InstagramTab
+import com.mayurg.instadownloader_presentation.InstagramList
+import com.mayurg.instadownloader_presentation.ViewImage
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -25,6 +35,8 @@ fun TabsSetup(
     val scope = rememberCoroutineScope()
     val instaTabCount = remember { mutableStateOf(0) }
     val fbTabCount = remember { mutableStateOf(0) }
+    val navController = rememberNavController()
+    val scaffoldState = rememberScaffoldState()
 
     val tabTitles = listOf(
         "Instagram",
@@ -58,9 +70,38 @@ fun TabsSetup(
             state = pagerState,
         ) { pageIndex ->
             when (pageIndex) {
-                0 -> InstagramTab(isPermissionAllowed, {
-                    instaTabCount.value = it
-                })
+                0 -> {
+                    NavHost(
+                        navController = navController,
+                        startDestination = "list"
+                    ) {
+                        composable(route = "list") {
+                            InstagramList(
+                                isPermissionAllowed = isPermissionAllowed,
+                                onItemClick = {
+                                    val encodedUrl = URLEncoder.encode(it.toString(), StandardCharsets.UTF_8.toString())
+                                    navController.navigate("view/$encodedUrl")
+                                },
+                                onCountChange = {
+                                    instaTabCount.value = it
+                                }
+                            )
+                        }
+
+                        composable(
+                            route = "view" + "/{uri}",
+                            arguments = listOf(
+                                navArgument("uri") {
+                                    type = NavType.StringType
+                                },
+                            )
+                        ) {
+                            val uri = it.arguments?.getString("uri")!!.toUri()
+                            ViewImage(uri)
+                        }
+                    }
+
+                }
                 1 -> FacebookTab()
             }
         }

@@ -1,7 +1,9 @@
 package com.mayurg.instadownloader_presentation
 
+import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.GridCells
@@ -17,7 +19,7 @@ import coil.compose.AsyncImage
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FilesList(list: List<DocumentFile>) {
+fun FilesList(list: List<DocumentFile>, onItemClick: (uri: Uri) -> Unit) {
     LazyVerticalGrid(
         cells = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize(),
@@ -32,9 +34,12 @@ fun FilesList(list: List<DocumentFile>) {
                         model = item.uri,
                         modifier = Modifier
                             .border(0.5.dp, Color.White)
-                            .aspectRatio(1f),
+                            .aspectRatio(1f)
+                            .clickable {
+                                onItemClick(item.uri)
+                            },
                         contentDescription = "test",
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Crop,
                     )
                 }
             }

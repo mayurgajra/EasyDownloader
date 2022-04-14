@@ -2,6 +2,7 @@ package com.mayurg.instadownloader_presentation
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,9 +17,10 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
-fun InstagramTab(
+fun InstagramList(
     isPermissionAllowed: Boolean = false,
     onCountChange: (count: Int) -> Unit,
+    onItemClick: (uri: Uri) -> Unit,
     viewModel: InstaViewModel = hiltViewModel()
 ) {
 
@@ -67,7 +69,7 @@ fun InstagramTab(
             viewModel.loadFiles()
         },
     ) {
-        FilesList(list = state.list)
+        FilesList(list = state.list,onItemClick)
     }
 }
 
