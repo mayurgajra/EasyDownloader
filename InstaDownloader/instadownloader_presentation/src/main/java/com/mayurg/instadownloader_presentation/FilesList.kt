@@ -27,7 +27,13 @@ fun FilesList(list: List<DocumentFile>, onItemClick: (uri: Uri) -> Unit) {
             items(list) { item ->
                 if (item.name?.contains(".mp4") == true) {
                     VideoThumbnailLoader(
-                        uri = item.uri
+                        uri = item.uri,
+                        modifier = Modifier
+                            .border(0.5.dp, Color.White)
+                            .aspectRatio(1f)
+                            .clickable {
+                                onItemClick(item.uri)
+                            }
                     )
                 } else {
                     AsyncImage(

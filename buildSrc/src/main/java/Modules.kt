@@ -13,4 +13,5 @@ object Modules {
     const val fbDownloaderPresentation = ":FbDownloader:fbdownloader_presentation"
 
     const val fileManager = ":FileManager"
+    const val composeVideoPlayer = ":composevideoplayer"
 }

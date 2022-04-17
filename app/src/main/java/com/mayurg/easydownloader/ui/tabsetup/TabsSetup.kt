@@ -20,6 +20,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.mayurg.fbdownloader_presentation.FacebookTab
 import com.mayurg.instadownloader_presentation.InstagramList
 import com.mayurg.instadownloader_presentation.ViewImage
+import com.mayurg.instadownloader_presentation.ViewVideo
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -97,7 +98,12 @@ fun TabsSetup(
                             )
                         ) {
                             val uri = it.arguments?.getString("uri")!!.toUri()
-                            ViewImage(uri)
+
+                            if (uri.toString().contains(".mp4")){
+                                ViewVideo(uri)
+                            } else {
+                                ViewImage(uri)
+                            }
                         }
                     }
 
