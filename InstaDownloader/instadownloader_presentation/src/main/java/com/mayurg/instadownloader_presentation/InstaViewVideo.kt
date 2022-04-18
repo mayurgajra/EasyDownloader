@@ -1,11 +1,19 @@
 package com.mayurg.instadownloader_presentation
 
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.halilibo.composevideoplayer.VideoPlayer
@@ -31,14 +39,48 @@ fun ViewVideo(uri: Uri) {
         }
     }
 
-    LaunchedEffect(key1 = uri){
+    LaunchedEffect(key1 = uri) {
         videoPlayerController.setSource(VideoPlayerSource.LocalStorage(uri))
     }
 
-    VideoPlayer(
-        videoPlayerController = videoPlayerController,
-        backgroundColor = Color.Transparent,
-        modifier = Modifier.fillMaxSize(),
-        controlsEnabled = true
-    )
+    val context = LocalContext.current
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        VideoPlayer(
+            videoPlayerController = videoPlayerController,
+            backgroundColor = Color.Transparent,
+            modifier = Modifier.fillMaxSize(),
+            controlsEnabled = true
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.End,
+        ) {
+            IconButton(
+                modifier = Modifier.padding(4.dp),
+                onClick = {
+                    shareImage(context, uri)
+                }) {
+                Icon(imageVector = Icons.Filled.Share, contentDescription = "")
+            }
+        }
+    }
+
+
+}
+
+private fun shareImage(context: Context, uri: Uri) {
+    val sharingIntent = Intent(Intent.ACTION_SEND)
+    sharingIntent.type = "video/*"
+    sharingIntent.setPackage("com.whatsapp")
+    sharingIntent.putExtra(Intent.EXTRA_STREAM, uri)
+
+    context.startActivities(arrayOf(Intent.createChooser(sharingIntent, "Share with")))
 }
