@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,7 @@ import com.mayurg.easydownloader.services.DownloadService
 import com.mayurg.easydownloader.ui.tabsetup.TabsSetup
 import com.mayurg.easydownloader.ui.theme.EasyDownloaderTheme
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -35,6 +37,21 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val path = "/Easydownloader/Insta/"
+
+        val file: File
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            file =
+                File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)?.absolutePath + path)
+        } else {
+            file = File(Environment.getExternalStorageDirectory().absolutePath + path)
+        }
+
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+
         setContent {
             EasyDownloaderTheme {
 
