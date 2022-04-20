@@ -1,13 +1,13 @@
 package com.mayurg.instadownloader_data.repository
 
 import android.net.Uri
-import androidx.documentfile.provider.DocumentFile
 import androidx.work.*
 import com.mayurg.filemanager.FileManager
 import com.mayurg.instadownloader_data.local.InstaDownloaderPrefs
 import com.mayurg.instadownloader_data.remote.DownloadWorker
 import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
 import com.mayurg.instadownloader_domain.repository.InstaDownloaderRepository
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -59,8 +59,9 @@ class InstaDownloaderRepositoryImpl @Inject constructor(
 
     }
 
-    override suspend fun readFiles(uri: Uri): List<DocumentFile> {
-        return fileManager.loadDirectory(uri)
+    override suspend fun readFiles(): MutableList<File> {
+        val path = "/Easydownloader/Insta/"
+        return fileManager.loadInstaFiles(path)
     }
 
     override suspend fun saveFilesUri(uri: Uri) {

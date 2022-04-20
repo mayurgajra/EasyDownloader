@@ -24,14 +24,11 @@ class InstaViewModel @Inject constructor(
     val isRefreshing = MutableStateFlow(false)
 
 
-    fun loadFiles(uri: Uri? = null) {
+    fun loadFiles() {
         viewModelScope.launch {
             isRefreshing.value = true
-            val callUri = uri ?: getDirectoryUri()
-            callUri?.let {
-                val list = instaLoaderUseCases.instaLoadFiles(it)
-                state = state.copy(list = list)
-            }
+            val list = instaLoaderUseCases.instaLoadFiles()
+            state = state.copy(list = list)
             isRefreshing.value = false
         }
     }

@@ -14,35 +14,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import androidx.documentfile.provider.DocumentFile
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
+import java.io.File
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FilesList(list: List<DocumentFile>, onItemClick: (uri: Uri) -> Unit) {
+fun FilesList(list: MutableList<File>, onItemClick: (uri: Uri) -> Unit) {
     LazyVerticalGrid(
         cells = GridCells.Fixed(3),
         modifier = Modifier.fillMaxSize(),
         content = {
             items(list) { item ->
-                if (item.name?.contains(".mp4") == true) {
+                if (item.name.contains(".mp4")) {
                     VideoThumbnailLoader(
-                        uri = item.uri,
+                        uri = item.toUri(),
                         modifier = Modifier
                             .border(0.5.dp, Color.White)
                             .aspectRatio(1f)
                             .clickable {
-                                onItemClick(item.uri)
+                                onItemClick(item.toUri())
                             }
                     )
                 } else {
                     AsyncImage(
-                        model = item.uri,
+                        model = item.toUri(),
                         modifier = Modifier
                             .border(0.5.dp, Color.White)
                             .aspectRatio(1f)
                             .clickable {
-                                onItemClick(item.uri)
+                                onItemClick(item.toUri())
                             },
                         contentDescription = "test",
                         contentScale = ContentScale.Crop,

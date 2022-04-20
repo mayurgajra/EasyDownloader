@@ -41,20 +41,13 @@ fun InstagramList(
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
             viewModel.saveDirectoryUri(directoryUri)
-            viewModel.loadFiles(directoryUri)
+            viewModel.loadFiles()
         }
     }
 
     LaunchedEffect(key1 = isPermissionAllowed) {
         if (isPermissionAllowed) {
-            val uri = viewModel.getDirectoryUri()
-
-            if (uri != null) {
-                viewModel.loadFiles(uri)
-            } else {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-                launcher.launch(intent)
-            }
+            viewModel.loadFiles()
         }
     }
 

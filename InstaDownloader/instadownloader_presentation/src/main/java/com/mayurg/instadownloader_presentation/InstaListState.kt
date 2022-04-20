@@ -1,7 +1,7 @@
 package com.mayurg.instadownloader_presentation
 
-import androidx.documentfile.provider.DocumentFile
+import java.io.File
 
 data class InstaListState(
-    val list: List<DocumentFile> = mutableListOf()
+    val list: MutableList<File> = mutableListOf()
 )
