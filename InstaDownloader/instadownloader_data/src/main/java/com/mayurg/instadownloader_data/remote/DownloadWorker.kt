@@ -81,7 +81,7 @@ class DownloadWorker(
             put(MediaStore.Images.Media.DISPLAY_NAME, "$displayName.jpg")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/EasyDownloader")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Easydownloader/Insta")
             }
         }
         return try {
@@ -112,7 +112,7 @@ class DownloadWorker(
             put(MediaStore.Video.Media.DISPLAY_NAME, "$displayName.mp4")
             put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/EasyDownloader")
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Easydownloader/Insta")
             }
         }
 
