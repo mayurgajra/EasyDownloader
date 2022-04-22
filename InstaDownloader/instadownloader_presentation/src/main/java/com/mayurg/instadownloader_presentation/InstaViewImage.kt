@@ -16,6 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
+import androidx.core.net.toFile
 import coil.compose.AsyncImage
 
 @Composable
@@ -54,10 +56,16 @@ fun ViewImage(uri: Uri) {
 }
 
 private fun shareVideo(context: Context, uri: Uri) {
+    val photoURI: Uri = FileProvider.getUriForFile(
+        context,
+        context.applicationContext.packageName.toString() + ".provider",
+        uri.toFile()
+    )
+
     val sharingIntent = Intent(Intent.ACTION_SEND)
     sharingIntent.type = "image/*"
     sharingIntent.setPackage("com.whatsapp")
-    sharingIntent.putExtra(Intent.EXTRA_STREAM, uri)
-
+    sharingIntent.putExtra(Intent.EXTRA_STREAM, photoURI)
+    sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     context.startActivities(arrayOf(Intent.createChooser(sharingIntent, "Share with")))
 }

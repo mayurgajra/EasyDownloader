@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
+import androidx.core.content.FileProvider
+import androidx.core.net.toFile
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.halilibo.composevideoplayer.VideoPlayer
@@ -77,10 +79,19 @@ fun ViewVideo(uri: Uri) {
 }
 
 private fun shareVideo(context: Context, uri: Uri) {
+
+    val photoURI: Uri = FileProvider.getUriForFile(
+        context,
+        context.applicationContext.packageName.toString() + ".provider",
+        uri.toFile()
+    )
+
     val sharingIntent = Intent(Intent.ACTION_SEND)
     sharingIntent.type = "video/*"
     sharingIntent.setPackage("com.whatsapp")
-    sharingIntent.putExtra(Intent.EXTRA_STREAM, uri)
+    sharingIntent.putExtra(Intent.EXTRA_STREAM, photoURI)
+    sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
 
     context.startActivities(arrayOf(Intent.createChooser(sharingIntent, "Share with")))
 }
