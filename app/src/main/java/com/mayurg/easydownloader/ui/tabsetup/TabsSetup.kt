@@ -3,7 +3,6 @@ package com.mayurg.easydownloader.ui.tabsetup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.TabRow
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,16 +36,11 @@ fun TabsSetup(
     val instaTabCount = remember { mutableStateOf(0) }
     val fbTabCount = remember { mutableStateOf(0) }
     val navController = rememberNavController()
-    val scaffoldState = rememberScaffoldState()
 
-    val tabTitles = listOf(
-        "Instagram",
-        "Facebook"
-    )
-    val counts = listOf(
-        instaTabCount,
-        fbTabCount
-    )
+    val tabTitles = listOf("Instagram", "Facebook")
+    val counts = listOf(instaTabCount, fbTabCount)
+
+
     Column {
         TabRow(
             selectedTabIndex = pagerState.currentPage,
@@ -80,7 +74,10 @@ fun TabsSetup(
                             InstagramList(
                                 isPermissionAllowed = isPermissionAllowed,
                                 onItemClick = {
-                                    val encodedUrl = URLEncoder.encode(it.toString(), StandardCharsets.UTF_8.toString())
+                                    val encodedUrl = URLEncoder.encode(
+                                        it.toString(),
+                                        StandardCharsets.UTF_8.toString()
+                                    )
                                     navController.navigate("view/$encodedUrl")
                                 },
                                 onCountChange = {
@@ -99,7 +96,7 @@ fun TabsSetup(
                         ) {
                             val uri = it.arguments?.getString("uri")!!.toUri()
 
-                            if (uri.toString().contains(".mp4")){
+                            if (uri.toString().contains(".mp4")) {
                                 ViewVideo(uri)
                             } else {
                                 ViewImage(uri)

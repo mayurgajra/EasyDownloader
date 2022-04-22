@@ -36,7 +36,7 @@ fun ViewImage(uri: Uri) {
             IconButton(
                 modifier = Modifier.padding(4.dp),
                 onClick = {
-                    shareImage(context, uri)
+                    shareVideo(context, uri)
                 }) {
                 Icon(imageVector = Icons.Filled.Share, contentDescription = "")
             }
@@ -53,7 +53,7 @@ fun ViewImage(uri: Uri) {
 
 }
 
-private fun shareImage(context: Context, uri: Uri) {
+private fun shareVideo(context: Context, uri: Uri) {
     val sharingIntent = Intent(Intent.ACTION_SEND)
     sharingIntent.type = "image/*"
     sharingIntent.setPackage("com.whatsapp")

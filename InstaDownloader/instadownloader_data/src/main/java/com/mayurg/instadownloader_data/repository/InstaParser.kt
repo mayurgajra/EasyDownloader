@@ -5,10 +5,30 @@ import org.json.JSONObject
 
 class InstaParser {
 
+    companion object {
+        private const val KEY_DATA = "data"
+        private const val KEY_TYPE = "type"
+        private const val KEY_IMAGES = "images"
+        private const val KEY_VIDEOS = "videos"
+        private const val KEY_ORIGINAL = "original"
+        private const val KEY_SIDECAR = "sidecar"
+
+        // post types
+        private const val KEY_TYPE_IMAGE = "image"
+        private const val KEY_TYPE_SIDECAR = "sidecar"
+        private const val KEY_TYPE_VIDEO = "video"
+
+        //video quality
+        private const val KEY_QUALITY_HIGH = "high"
+        private const val KEY_QUALITY_STANDARD = "standard"
+        private const val KEY_QUALITY_LOW = "low"
+
+    }
+
     fun getType(response: String): String {
         try {
             val rootObj = JSONObject(response)
-            return rootObj.getJSONObject("data").optString("type", "")
+            return rootObj.getJSONObject(KEY_DATA).optString(KEY_TYPE, "")
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -19,18 +39,17 @@ class InstaParser {
     fun getDownloadUrl(response: String): List<String> {
         try {
             val rootObj = JSONObject(response)
-            val type = rootObj.getJSONObject("data").getString("type")
 
-            when (type) {
-                "image" -> {
+            when (getType(response)) {
+                KEY_TYPE_IMAGE -> {
                     return listOf(getImageUrl(rootObj))
                 }
 
-                "sidecar" -> {
+                KEY_TYPE_SIDECAR -> {
                     return getSideCarUrls(rootObj)
                 }
 
-                "video" -> {
+                KEY_TYPE_VIDEO -> {
                     return listOf(getVideoUrl(rootObj))
                 }
             }
@@ -43,20 +62,10 @@ class InstaParser {
 
     private fun getImageUrl(rootObj: JSONObject): String {
         try {
-            val images = rootObj.getJSONObject("data").getJSONObject("images")
-            val original = images.getJSONObject("original")
+            val images = rootObj.getJSONObject(KEY_DATA).getJSONObject(KEY_IMAGES)
+            val original = images.getJSONObject(KEY_ORIGINAL)
 
-            if (original.has("high")) {
-                return original.getString("high")
-            }
-
-            if (original.has("standard")) {
-                return original.getString("standard")
-            }
-
-            if (original.has("low")) {
-                return original.getString("low")
-            }
+            return getBestQualityUrl(original)
 
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -66,28 +75,15 @@ class InstaParser {
     }
 
     private fun getSideCarUrls(rootObj: JSONObject): List<String> {
-        val imageUrls = mutableListOf<String>()
+        val urls = mutableListOf<String>()
         try {
-            val sidecar = rootObj.getJSONObject("data").getJSONArray("sidecar")
+            val sidecar = rootObj.getJSONObject(KEY_DATA).getJSONArray(KEY_SIDECAR)
 
             for (i in 0 until sidecar.length()) {
-                val images = sidecar.getJSONObject(i).getJSONObject("images")
-                val original = images.getJSONObject("original")
+                val images = sidecar.getJSONObject(i).getJSONObject(KEY_IMAGES)
+                val original = images.getJSONObject(KEY_ORIGINAL)
 
-                if (original.has("high")) {
-                    imageUrls.add(original.getString("high"))
-                    continue
-                }
-
-                if (original.has("standard")) {
-                    imageUrls.add(original.getString("standard"))
-                    continue
-                }
-
-                if (original.has("low")) {
-                    imageUrls.add(original.getString("standard"))
-                    continue
-                }
+                urls.add(getBestQualityUrl(original))
             }
 
 
@@ -95,28 +91,34 @@ class InstaParser {
             e.printStackTrace()
         }
 
-        return imageUrls
+        return urls
     }
 
 
     private fun getVideoUrl(rootObj: JSONObject): String {
         try {
-            val videos = rootObj.getJSONObject("data").getJSONObject("videos")
+            val videos = rootObj.getJSONObject(KEY_DATA).getJSONObject(KEY_VIDEOS)
 
-            if (videos.has("high")) {
-                return videos.getString("high")
-            }
-
-            if (videos.has("standard")) {
-                return videos.getString("standard")
-            }
-
-            if (videos.has("low")) {
-                return videos.getString("low")
-            }
+            return getBestQualityUrl(videos)
 
         } catch (e: JSONException) {
             e.printStackTrace()
+        }
+
+        return ""
+    }
+
+    private fun getBestQualityUrl(jsonObject: JSONObject): String {
+        if (jsonObject.has(KEY_QUALITY_HIGH)) {
+            return jsonObject.getString(KEY_QUALITY_HIGH)
+        }
+
+        if (jsonObject.has(KEY_QUALITY_STANDARD)) {
+            return jsonObject.getString(KEY_QUALITY_STANDARD)
+        }
+
+        if (jsonObject.has(KEY_QUALITY_LOW)) {
+            return jsonObject.getString(KEY_QUALITY_LOW)
         }
 
         return ""

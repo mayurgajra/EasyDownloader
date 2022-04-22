@@ -12,7 +12,7 @@ interface InstaDownloaderApi {
     companion object {
         const val BASE_URL = "https://www.instagram.com/"
 
-        val instance by lazy {
+        val instance: InstaDownloaderApi by lazy {
             Retrofit.Builder()
                 .baseUrl("https://scontent-ham3-1.cdninstagram.com/v/t51.2885-15/")
                 .build()
