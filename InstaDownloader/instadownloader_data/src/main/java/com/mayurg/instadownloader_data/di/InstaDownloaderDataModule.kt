@@ -1,17 +1,12 @@
 package com.mayurg.instadownloader_data.di
 
 import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.work.WorkManager
 import com.mayurg.filemanager.FileManager
 import com.mayurg.instadownloader_data.R
-import com.mayurg.instadownloader_data.local.InstaDownloaderPrefs
-import com.mayurg.instadownloader_data.local.InstaDownloaderPrefsImpl
 import com.mayurg.instadownloader_data.remote.InstaDownloaderApi
 import com.mayurg.instadownloader_data.repository.InstaDownloaderRepositoryImpl
 import com.mayurg.instadownloader_data.repository.InstaParser
-import com.mayurg.instadownloader_data.utils.Constants
 import com.mayurg.instadownloader_domain.repository.InstaDownloaderRepository
 import dagger.Module
 import dagger.Provides
@@ -97,7 +92,6 @@ object InstaDownloaderDataModule {
         workManager: WorkManager,
         instaDownloaderApi: InstaDownloaderApi,
         fileManager: FileManager,
-        instaDownloaderPrefs: InstaDownloaderPrefs
     ): InstaDownloaderRepository {
         return InstaDownloaderRepositoryImpl(
             response,
@@ -105,7 +99,6 @@ object InstaDownloaderDataModule {
             workManager,
             instaDownloaderApi,
             fileManager,
-            instaDownloaderPrefs
         )
     }
 
@@ -115,25 +108,5 @@ object InstaDownloaderDataModule {
         app: Application
     ): FileManager {
         return FileManager.Builder(app.applicationContext).build()
-    }
-
-    @Provides
-    @Singleton
-    @Named(Constants.PREF_NAME)
-    fun provideInstaPrefs(
-        app: Application
-    ): SharedPreferences {
-        return app.applicationContext.getSharedPreferences(
-            Constants.PREF_NAME,
-            Context.MODE_PRIVATE
-        )
-    }
-
-    @Provides
-    @Singleton
-    fun provideInstaDownloaderPrefs(
-        @Named(Constants.PREF_NAME) sharedPreferences: SharedPreferences
-    ): InstaDownloaderPrefs {
-        return InstaDownloaderPrefsImpl(sharedPreferences)
     }
 }

@@ -1,10 +1,8 @@
 package com.mayurg.instadownloader_domain.di
 
 import com.mayurg.instadownloader_domain.repository.InstaDownloaderRepository
-import com.mayurg.instadownloader_domain.use_case.InstaGetDirectoryUri
 import com.mayurg.instadownloader_domain.use_case.InstaLoadFiles
 import com.mayurg.instadownloader_domain.use_case.InstaLoaderUseCases
-import com.mayurg.instadownloader_domain.use_case.InstaSaveDirectoryUri
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +20,6 @@ object InstaDownloaderDomainModule {
     ): InstaLoaderUseCases {
         return InstaLoaderUseCases(
             InstaLoadFiles(instaLoadRepository),
-            InstaSaveDirectoryUri(instaLoadRepository),
-            InstaGetDirectoryUri(instaLoadRepository),
         )
     }
 }

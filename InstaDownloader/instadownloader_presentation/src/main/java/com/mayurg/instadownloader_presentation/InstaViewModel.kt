@@ -1,6 +1,5 @@
 package com.mayurg.instadownloader_presentation
 
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -31,16 +30,6 @@ class InstaViewModel @Inject constructor(
             state = state.copy(list = list)
             isRefreshing.value = false
         }
-    }
-
-    fun saveDirectoryUri(uri: Uri) {
-        viewModelScope.launch {
-            instaLoaderUseCases.instaSaveDirectoryUri(uri)
-        }
-    }
-
-    suspend fun getDirectoryUri(): Uri? {
-        return instaLoaderUseCases.instaGetDirectoryUri()
     }
 
 
