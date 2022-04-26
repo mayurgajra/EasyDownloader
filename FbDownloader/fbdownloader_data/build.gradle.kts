@@ -5,6 +5,8 @@ apply {
 dependencies {
     "implementation"(project(Modules.core))
     "implementation"(project(Modules.fbDownloaderDomain))
+    "implementation"(project(Modules.fileManager))
+
 
     "implementation"(Retrofit.okHttp)
     "implementation"(Retrofit.retrofit)

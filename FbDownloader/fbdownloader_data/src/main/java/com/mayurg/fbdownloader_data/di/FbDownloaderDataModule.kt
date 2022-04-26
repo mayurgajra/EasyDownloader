@@ -1,6 +1,10 @@
 package com.mayurg.fbdownloader_data.di
 
+import android.app.Application
+import androidx.work.WorkManager
+import com.mayurg.fbdownloader_data.R
 import com.mayurg.fbdownloader_data.remote.FbDownloaderApi
+import com.mayurg.filemanager.FileManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -9,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -45,6 +50,34 @@ object FbDownloaderDataModule {
             .client(client)
             .build()
             .create(FbDownloaderApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    @Named("response")
+    fun providesSampleResponse(
+        app: Application
+    ): String {
+        return app.resources
+            .openRawResource(R.raw.sample)
+            .readBytes()
+            .decodeToString()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(
+        app: Application
+    ): WorkManager {
+        return WorkManager.getInstance(app)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileManger(
+        app: Application
+    ): FileManager {
+        return FileManager.Builder(app.applicationContext).build()
     }
 
 }
