@@ -25,5 +25,10 @@ interface FbDownloaderApi {
         @Url url: String,
     ): Response<ResponseBody>
 
+    @GET
+    suspend fun downloadFbMedia(
+        @Url url: String,
+    ): Response<ResponseBody>
+
 
 }
