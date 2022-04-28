@@ -16,8 +16,8 @@ import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.mayurg.fbdownloader_presentation.FacebookTab
-import com.mayurg.instadownloader_presentation.InstagramList
+import com.mayurg.fbdownloader_presentation.FbMediaList
+import com.mayurg.instadownloader_presentation.InstaMediaList
 import com.mayurg.instadownloader_presentation.ViewImage
 import com.mayurg.instadownloader_presentation.ViewVideo
 import kotlinx.coroutines.launch
@@ -71,7 +71,7 @@ fun TabsSetup(
                         startDestination = "list"
                     ) {
                         composable(route = "list") {
-                            InstagramList(
+                            InstaMediaList(
                                 isPermissionAllowed = isPermissionAllowed,
                                 onItemClick = {
                                     val encodedUrl = URLEncoder.encode(
@@ -105,7 +105,46 @@ fun TabsSetup(
                     }
 
                 }
-                1 -> FacebookTab()
+                1 -> {
+                    NavHost(
+                        navController = navController,
+                        startDestination = "list"
+                    ) {
+                        composable(route = "list") {
+                            FbMediaList(
+                                isPermissionAllowed = isPermissionAllowed,
+                                onItemClick = {
+                                    val encodedUrl = URLEncoder.encode(
+                                        it.toString(),
+                                        StandardCharsets.UTF_8.toString()
+                                    )
+                                    navController.navigate("view/$encodedUrl")
+                                },
+                                onCountChange = {
+                                    fbTabCount.value = it
+                                }
+                            )
+                        }
+
+                        composable(
+                            route = "view" + "/{uri}",
+                            arguments = listOf(
+                                navArgument("uri") {
+                                    type = NavType.StringType
+                                },
+                            )
+                        ) {
+                            val uri = it.arguments?.getString("uri")!!.toUri()
+
+                            if (uri.toString().contains(".mp4")) {
+                                ViewVideo(uri)
+                            } else {
+                                ViewImage(uri)
+                            }
+                        }
+                    }
+
+                }
             }
         }
 

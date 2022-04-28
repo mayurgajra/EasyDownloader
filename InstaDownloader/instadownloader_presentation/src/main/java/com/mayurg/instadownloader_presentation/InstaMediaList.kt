@@ -12,7 +12,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
-fun InstagramList(
+fun InstaMediaList(
     isPermissionAllowed: Boolean = false,
     onCountChange: (count: Int) -> Unit,
     onItemClick: (uri: Uri) -> Unit,
