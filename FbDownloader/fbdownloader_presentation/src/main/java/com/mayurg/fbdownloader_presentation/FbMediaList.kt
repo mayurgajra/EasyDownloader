@@ -1,25 +1,43 @@
 package com.mayurg.fbdownloader_presentation
 
 import android.net.Uri
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun FbMediaList(
     isPermissionAllowed: Boolean,
     onCountChange: (count: Int) -> Unit,
     onItemClick: (uri: Uri) -> Unit,
+    viewModel: FbViewModel = hiltViewModel()
 ) {
-    Column(
+    val state = viewModel.state
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
+
+    LaunchedEffect(key1 = isPermissionAllowed) {
+        if (isPermissionAllowed) {
+            viewModel.loadFiles()
+        }
+    }
+
+    LaunchedEffect(key1 = state.list.count()) {
+        onCountChange(state.list.count())
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing),
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        onRefresh = {
+            viewModel.loadFiles()
+        },
     ) {
-        Text(text = "FB")
+//        FilesList(list = state.list,onItemClick)
     }
 }
