@@ -20,10 +20,10 @@ class FbDownloaderRepositoryImpl @Inject constructor(
 
     override suspend fun downloadMedia(url: String) {
 
-      /*  val a = url.substring(0, url.lastIndexOf("/"))
-        val b = "https://instagram85.p.rapidapi.com/media/$a"
-        val response1 = fbDownloaderApi.getMediaInfoFromUrl(b)
-        Log.d("MG-data", response1.toString())*/
+        /*  val a = url.substring(0, url.lastIndexOf("/"))
+          val b = "https://instagram85.p.rapidapi.com/media/$a"
+          val response1 = fbDownloaderApi.getMediaInfoFromUrl(b)
+          Log.d("MG-data", response1.toString())*/
 
         response.let { body ->
             val downloadUrls = fbParser.getDownloadUrl(body)

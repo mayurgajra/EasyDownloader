@@ -65,7 +65,7 @@ object FbDownloaderDataModule {
         app: Application
     ): String {
         return app.resources
-            .openRawResource(R.raw.sample)
+            .openRawResource(R.raw.fbsample)
             .readBytes()
             .decodeToString()
     }
