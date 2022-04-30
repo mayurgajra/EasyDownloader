@@ -38,6 +38,6 @@ fun FbMediaList(
             viewModel.loadFiles()
         },
     ) {
-//        FilesList(list = state.list,onItemClick)
+        FilesList(list = state.list,onItemClick)
     }
 }

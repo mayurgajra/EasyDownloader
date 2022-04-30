@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.mayurg.easydownloader.utils.CHANNEL_ID
 import com.mayurg.easydownloader.utils.KEY_TEXT_REPLY
 import com.mayurg.easydownloader.utils.createReplyNotification
+import com.mayurg.fbdownloader_domain.repository.FbDownloaderRepository
 import com.mayurg.instadownloader_domain.repository.InstaDownloaderRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -23,6 +24,9 @@ class DownloadService : LifecycleService() {
 
     @Inject
     lateinit var instaDownloaderApi: InstaDownloaderRepository
+
+    @Inject
+    lateinit var fbDownloaderRepository: FbDownloaderRepository
 
     companion object {
         const val CUSTOM_ACTION = "com.mayurg.easydownloader.download"
@@ -42,7 +46,16 @@ class DownloadService : LifecycleService() {
                 text?.toString()?.let { url ->
                     Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
                     lifecycleScope.launch {
-                        instaDownloaderApi.downloadMedia(url)
+                        when {
+                            url.contains("www.instagram.com") -> {
+                                instaDownloaderApi.downloadMedia(url)
+                            }
+
+                            else -> {
+                                fbDownloaderRepository.downloadMedia(url)
+                            }
+                        }
+
                     }
                 }
             }

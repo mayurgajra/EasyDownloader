@@ -1,6 +1,5 @@
 package com.mayurg.fbdownloader_data.repository
 
-import android.util.Log
 import androidx.work.*
 import com.mayurg.fbdownloader_data.remote.DownloadWorker
 import com.mayurg.fbdownloader_data.remote.FbDownloaderApi
@@ -12,21 +11,21 @@ import javax.inject.Named
 
 
 class FbDownloaderRepositoryImpl @Inject constructor(
-    @Named("response") private val response: String,
+    @Named("fbresponse") private val response: String,
     private val fbParser: FBParser,
-    private val workManager: WorkManager,
+    @Named("fbWorkManager") private val workManager: WorkManager,
     private val fbDownloaderApi: FbDownloaderApi,
-    private val fileManager: FileManager,
+    @Named("fbFileManager") private val fileManager: FileManager,
 ) : FbDownloaderRepository {
 
     override suspend fun downloadMedia(url: String) {
 
-        val a = url.substring(0, url.lastIndexOf("/"))
+      /*  val a = url.substring(0, url.lastIndexOf("/"))
         val b = "https://instagram85.p.rapidapi.com/media/$a"
         val response1 = fbDownloaderApi.getMediaInfoFromUrl(b)
-        Log.d("MG-data", response1.toString())
+        Log.d("MG-data", response1.toString())*/
 
-        response1.body()?.string()?.let { body ->
+        response.let { body ->
             val downloadUrls = fbParser.getDownloadUrl(body)
             val type = "video"
 

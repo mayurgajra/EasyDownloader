@@ -4,6 +4,9 @@ import android.app.Application
 import androidx.work.WorkManager
 import com.mayurg.fbdownloader_data.R
 import com.mayurg.fbdownloader_data.remote.FbDownloaderApi
+import com.mayurg.fbdownloader_data.repository.FBParser
+import com.mayurg.fbdownloader_data.repository.FbDownloaderRepositoryImpl
+import com.mayurg.fbdownloader_domain.repository.FbDownloaderRepository
 import com.mayurg.filemanager.FileManager
 import dagger.Module
 import dagger.Provides
@@ -22,6 +25,7 @@ object FbDownloaderDataModule {
 
     @Provides
     @Singleton
+    @Named("fbOkHttpClient")
     fun providesOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(
@@ -43,7 +47,9 @@ object FbDownloaderDataModule {
 
     @Provides
     @Singleton
-    fun providesInstaDownloaderApi(client: OkHttpClient): FbDownloaderApi {
+    fun providesInstaDownloaderApi(
+        @Named("fbOkHttpClient") client: OkHttpClient
+    ): FbDownloaderApi {
         return Retrofit.Builder()
             .baseUrl(FbDownloaderApi.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
@@ -54,7 +60,7 @@ object FbDownloaderDataModule {
 
     @Provides
     @Singleton
-    @Named("response")
+    @Named("fbresponse")
     fun providesSampleResponse(
         app: Application
     ): String {
@@ -66,6 +72,7 @@ object FbDownloaderDataModule {
 
     @Provides
     @Singleton
+    @Named("fbWorkManager")
     fun provideWorkManager(
         app: Application
     ): WorkManager {
@@ -74,10 +81,29 @@ object FbDownloaderDataModule {
 
     @Provides
     @Singleton
+    @Named("fbFileManager")
     fun provideFileManger(
         app: Application
     ): FileManager {
         return FileManager.Builder(app.applicationContext).build()
     }
 
+
+    @Provides
+    @Singleton
+    fun provideFBRepository(
+        @Named("fbresponse") response: String,
+        fbParser: FBParser,
+        @Named("fbWorkManager") workManager: WorkManager,
+        fbDownloaderApi: FbDownloaderApi,
+        @Named("fbFileManager") fileManager: FileManager,
+    ): FbDownloaderRepository {
+        return FbDownloaderRepositoryImpl(
+            response,
+            fbParser,
+            workManager,
+            fbDownloaderApi,
+            fileManager,
+        )
+    }
 }
