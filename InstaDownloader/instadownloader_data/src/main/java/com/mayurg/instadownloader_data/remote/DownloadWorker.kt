@@ -31,7 +31,7 @@ class DownloadWorker(
             InstaDownloaderApi.instance.downloadInstaImage(downloadUrl)
         response.body()?.let { body ->
             return withContext(Dispatchers.IO) {
-                if (type == "video") {
+                if (type == "Post-Video") {
                     saveVideoToExternalStorage(UUID.randomUUID().toString(), body)
                 } else {
                     savePhotoToExternalStorage(UUID.randomUUID().toString(), body)

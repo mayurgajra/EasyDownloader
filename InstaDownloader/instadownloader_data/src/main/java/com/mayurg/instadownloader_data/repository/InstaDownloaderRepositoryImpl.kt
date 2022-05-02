@@ -10,7 +10,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
-
+@Suppress("BlockingMethodInNonBlockingContext")
 class InstaDownloaderRepositoryImpl @Inject constructor(
     @Named("response") private val response: String,
     private val instaParser: InstaParser,
@@ -21,9 +21,9 @@ class InstaDownloaderRepositoryImpl @Inject constructor(
 
     override suspend fun downloadMedia(url: String) {
 
-        val a = url.substring(0, url.lastIndexOf("/"))
-        val b = "https://instagram85.p.rapidapi.com/media/$a"
-        val response1 = instaDownloaderApi.getMediaInfoFromUrl(b, "url")
+        val postUrl = url.substring(0, url.lastIndexOf("/"))
+        val callUrl = "https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index/"
+        val response1 = instaDownloaderApi.getMediaInfoFromUrl(callUrl, postUrl)
         Log.d("MG-data", response1.toString())
 
         response1.body()?.string()?.let { body ->

@@ -35,7 +35,7 @@ object InstaDownloaderDataModule {
             ).addInterceptor {
                 it.proceed(
                     it.request().newBuilder()
-                        .addHeader("x-rapidapi-host", "instagram85.p.rapidapi.com")
+                        .addHeader("x-rapidapi-host", "instagram-downloader-download-instagram-videos-stories.p.rapidapi.com")
                         .addHeader(
                             "x-rapidapi-key",
                             "393dc2581cmsh4136cd415472ca0p1a1259jsn911f834c48ea"

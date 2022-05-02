@@ -24,7 +24,7 @@ interface InstaDownloaderApi {
     @GET
     suspend fun getMediaInfoFromUrl(
         @Url url: String,
-        @Query("by") a: String
+        @Query("url") a: String
     ): Response<ResponseBody>
 
     @GET
