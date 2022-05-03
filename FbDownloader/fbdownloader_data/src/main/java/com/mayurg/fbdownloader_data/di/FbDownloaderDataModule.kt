@@ -82,10 +82,8 @@ object FbDownloaderDataModule {
     @Provides
     @Singleton
     @Named("fbFileManager")
-    fun provideFileManger(
-        app: Application
-    ): FileManager {
-        return FileManager.Builder(app.applicationContext).build()
+    fun provideFileManger(): FileManager {
+        return FileManager.Builder().build()
     }
 
 

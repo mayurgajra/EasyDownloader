@@ -62,6 +62,6 @@ class InstaDownloaderRepositoryImpl @Inject constructor(
 
     override suspend fun readFiles(): MutableList<File> {
         val path = "/Easydownloader/Insta/"
-        return fileManager.loadInstaFiles(path)
+        return fileManager.loadFilesFromPath(path)
     }
 }

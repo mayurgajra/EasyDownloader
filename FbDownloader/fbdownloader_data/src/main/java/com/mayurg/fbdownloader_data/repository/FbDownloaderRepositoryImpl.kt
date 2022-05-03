@@ -63,6 +63,6 @@ class FbDownloaderRepositoryImpl @Inject constructor(
 
     override suspend fun readFiles(): MutableList<File> {
         val path = "/Easydownloader/FB/"
-        return fileManager.loadInstaFiles(path)
+        return fileManager.loadFilesFromPath(path)
     }
 }
