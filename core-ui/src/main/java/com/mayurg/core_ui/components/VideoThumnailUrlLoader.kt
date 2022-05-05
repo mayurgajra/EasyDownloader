@@ -1,4 +1,4 @@
-package com.mayurg.fbdownloader_presentation
+package com.mayurg.core_ui.components
 
 import android.net.Uri
 import androidx.compose.foundation.Image

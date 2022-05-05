@@ -3,5 +3,8 @@ apply {
 }
 
 dependencies {
+    "implementation"(project(Modules.composeVideoPlayer))
 
+    "implementation"(Coil.coilCompose)
+    "implementation"(Coil.coilComposeVideo)
 }

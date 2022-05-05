@@ -16,10 +16,10 @@ import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.mayurg.core_ui.components.ViewImage
+import com.mayurg.core_ui.components.ViewVideo
 import com.mayurg.fbdownloader_presentation.FbMediaList
 import com.mayurg.instadownloader_presentation.InstaMediaList
-import com.mayurg.instadownloader_presentation.ViewImage
-import com.mayurg.instadownloader_presentation.ViewVideo
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets

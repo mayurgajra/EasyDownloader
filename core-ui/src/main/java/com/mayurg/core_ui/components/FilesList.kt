@@ -1,4 +1,4 @@
-package com.mayurg.instadownloader_presentation
+package com.mayurg.core_ui.components
 
 import android.net.Uri
 import androidx.compose.foundation.ExperimentalFoundationApi
